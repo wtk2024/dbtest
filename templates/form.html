@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <title>Form Submission</title>
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Submit Your Data</h1>
+            <form id="data-form">
+                <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input class="input" type="text" id="name" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Value</label>
+                    <div class="control">
+                        <input class="input" type="text" id="value" required>
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-link" type="submit">Submit</button>
+                </div>
+            </form>
+            <div id="response-message" class="mt-4"></div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('data-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const value = document.getElementById('value').value;
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, value }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response-message').innerText = data.message;
+                document.getElementById('data-form').reset();  // Reset the form
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
